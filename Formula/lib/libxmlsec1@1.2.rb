@@ -14,8 +14,8 @@ class Libxmlsec1AT12 < Formula
   depends_on "pkg-config" => :build
   depends_on "gnutls" # Yes, it wants both ssl/tls variations
   depends_on "libgcrypt"
-  depends_on "libxml2"
   depends_on "openssl@3"
+  uses_from_macos "libxml2"
   uses_from_macos "libxslt"
 
   on_macos do
@@ -34,7 +34,10 @@ class Libxmlsec1AT12 < Formula
             "--with-nspr=no",
             "--enable-mscrypto=no",
             "--enable-mscng=no",
-            "--with-openssl=#{Formula["openssl@3"].opt_prefix}"]
+            "--with-openssl=#{Formula["openssl@3"].opt_prefix}",
+            # Link against the system libxml2 library, so we have compatibility
+            "--with-libxml=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr"
+          ]
 
     system "./configure", *args
     system "make", "install"
